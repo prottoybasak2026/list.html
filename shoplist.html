@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Shopping List Notepad</title>
+
+<style>
+
+/* =========================
+   BASIC RESET
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   BODY
+========================= */
+
+body {
+    min-height: 100vh;
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            #f5f0df 0px,
+            #f5f0df 31px,
+            #d8d2c0 32px
+        );
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    padding: 30px 15px;
+
+    color: #292929;
+}
+
+
+/* =========================
+   NOTEBOOK
+========================= */
+
+.notebook {
+    width: 100%;
+    max-width: 650px;
+
+    background: #fffdf3;
+
+    border-radius: 8px;
+
+    padding: 30px 25px 35px;
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.15),
+        0 2px 5px rgba(0, 0, 0, 0.08);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* Red notebook margin line */
+
+.notebook::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    left: 58px;
+
+    width: 2px;
+
+    background: #e7a5a5;
+
+    opacity: 0.8;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    text-align: center;
+
+    padding-bottom: 20px;
+
+    border-bottom: 2px dashed #c8c1ad;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+.header h1 {
+    font-family: Georgia, serif;
+
+    font-size: 32px;
+
+    color: #222;
+
+    margin-bottom: 6px;
+}
+
+.header p {
+    font-size: 14px;
+
+    color: #777;
+}
+
+
+/* =========================
+   INPUT AREA
+========================= */
+
+.input-area {
+    display: flex;
+
+    gap: 10px;
+
+    margin: 25px 0;
+
+    padding-left: 50px;
+}
+
+.input-area input {
+    flex: 1;
+
+    height: 48px;
+
+    border: none;
+
+    border-bottom: 2px solid #555;
+
+    outline: none;
+
+    background: transparent;
+
+    font-size: 16px;
+
+    padding: 0 8px;
+
+    color: #222;
+}
+
+.input-area input::placeholder {
+    color: #999;
+}
+
+
+.add-btn {
+    border: none;
+
+    background: #222;
+
+    color: white;
+
+    padding: 0 20px;
+
+    border-radius: 6px;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.add-btn:hover {
+    background: #444;
+
+    transform: translateY(-2px);
+}
+
+.add-btn:active {
+    transform: scale(0.96);
+}
+
+
+/* =========================
+   SHOPPING LIST
+========================= */
+
+.shopping-list {
+    list-style: none;
+
+    padding-left: 50px;
+}
+
+
+/* =========================
+   LIST ITEM
+========================= */
+
+.shopping-item {
+    min-height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    border-bottom: 1px solid rgba(100, 100, 100, 0.18);
+
+    position: relative;
+
+    animation: slideIn 0.3s ease;
+}
+
+
+@keyframes slideIn {
+
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+}
+
+
+/* Serial number */
+
+.serial {
+    width: 28px;
+
+    font-family: Georgia, serif;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    color: #777;
+
+    flex-shrink: 0;
+}
+
+
+/* Item text */
+
+.item-name {
+    flex: 1;
+
+    font-family: "Comic Sans MS", "Segoe Print", cursive;
+
+    font-size: 18px;
+
+    color: #292929;
+
+    position: relative;
+
+    padding: 8px 0;
+
+    word-break: break-word;
+}
+
+
+/* =========================
+   COMPLETE EFFECT
+========================= */
+
+.shopping-item.completed .item-name {
+    color: #777;
+}
+
+
+/*
+   Red marker-like line
+*/
+
+.shopping-item.completed .item-name::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: -3px;
+    right: -3px;
+
+    top: 50%;
+
+    height: 8px;
+
+    background: rgba(210, 30, 30, 0.65);
+
+    border-radius: 50%;
+
+    transform: translateY(-50%) rotate(-1deg);
+
+    z-index: 1;
+
+    pointer-events: none;
+
+}
+
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+.actions {
+    display: flex;
+
+    gap: 6px;
+
+    flex-shrink: 0;
+}
+
+
+.complete-btn,
+.delete-btn {
+
+    border: none;
+
+    cursor: pointer;
+
+    border-radius: 5px;
+
+    padding: 7px 9px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    transition: 0.2s;
+}
+
+
+.complete-btn {
+
+    background: #e7eee4;
+
+    color: #315a32;
+}
+
+.complete-btn:hover {
+    background: #d5e4d1;
+}
+
+
+.delete-btn {
+
+    background: #f2dddd;
+
+    color: #a22;
+}
+
+.delete-btn:hover {
+    background: #e9caca;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+
+    margin-top: 25px;
+
+    padding-top: 15px;
+
+    border-top: 2px dashed #c8c1ad;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding-left: 50px;
+}
+
+
+.counter {
+    font-size: 13px;
+
+    color: #777;
+}
+
+
+.clear-btn {
+
+    border: none;
+
+    background: transparent;
+
+    color: #a22;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    font-size: 13px;
+}
+
+.clear-btn:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   EMPTY MESSAGE
+========================= */
+
+.empty-state {
+
+    text-align: center;
+
+    padding: 40px 10px;
+
+    color: #999;
+
+    font-family: Georgia, serif;
+
+    font-size: 16px;
+}
+
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 15px 8px;
+    }
+
+    .notebook {
+        padding: 25px 15px 25px;
+    }
+
+    .notebook::before {
+        left: 43px;
+    }
+
+    .header h1 {
+        font-size: 26px;
+    }
+
+    .input-area {
+        padding-left: 35px;
+
+        flex-direction: column;
+    }
+
+    .input-area input {
+        height: 45px;
+    }
+
+    .add-btn {
+        height: 44px;
+    }
+
+    .shopping-list {
+        padding-left: 35px;
+    }
+
+    .shopping-item {
+        gap: 8px;
+    }
+
+    .item-name {
+        font-size: 16px;
+    }
+
+    .complete-btn,
+    .delete-btn {
+        padding: 6px 7px;
+
+        font-size: 11px;
+    }
+
+    .footer {
+        padding-left: 35px;
+    }
+
+}
+
+
+/* =========================
+   SMALL PHONE
+========================= */
+
+@media (max-width: 400px) {
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .shopping-item {
+        align-items: flex-start;
+
+        padding: 10px 0;
+    }
+
+    .item-name {
+        padding: 5px 0;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NOTEBOOK
+========================= -->
+
+<div class="notebook">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>Shopping List</h1>
+
+        <p>Write down everything you need to buy.</p>
+
+    </div>
+
+
+
+    <!-- INPUT -->
+
+    <div class="input-area">
+
+        <input
+            type="text"
+            id="itemInput"
+            placeholder="Write an item..."
+            autocomplete="off"
+        >
+
+        <button
+            class="add-btn"
+            onclick="addItem()"
+        >
+            + Add
+        </button>
+
+    </div>
+
+
+
+    <!-- LIST -->
+
+    <ul
+        id="shoppingList"
+        class="shopping-list"
+    ></ul>
+
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        <div
+            id="counter"
+            class="counter"
+        >
+            0 items
+        </div>
+
+
+        <button
+            class="clear-btn"
+            onclick="clearAll()"
+        >
+            Clear All
+        </button>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+/* =====================================
+   GET ELEMENTS
+===================================== */
+
+const itemInput =
+    document.getElementById("itemInput");
+
+const shoppingList =
+    document.getElementById("shoppingList");
+
+const counter =
+    document.getElementById("counter");
+
+
+/* =====================================
+   LOAD ITEMS FROM LOCAL STORAGE
+===================================== */
+
+let items =
+    JSON.parse(
+        localStorage.getItem("shoppingList")
+    ) || [];
+
+
+/* =====================================
+   SAVE ITEMS
+===================================== */
+
+function saveItems() {
+
+    localStorage.setItem(
+        "shoppingList",
+        JSON.stringify(items)
+    );
+
+}
+
+
+/* =====================================
+   DISPLAY ITEMS
+===================================== */
+
+function displayItems() {
+
+    shoppingList.innerHTML = "";
+
+
+    /* Empty list */
+
+    if (items.length === 0) {
+
+        shoppingList.innerHTML = `
+            <div class="empty-state">
+                Your shopping list is empty.<br>
+                Add something you need to buy.
+            </div>
+        `;
+
+        updateCounter();
+
+        return;
+    }
+
+
+    /* Display every item */
+
+    items.forEach((item, index) => {
+
+        const li =
+            document.createElement("li");
+
+        li.className =
+            "shopping-item";
+
+
+        /* Completed class */
+
+        if (item.completed) {
+
+            li.classList.add("completed");
+
+        }
+
+
+        li.innerHTML = `
+
+            <div class="serial">
+                ${index + 1}.
+            </div>
+
+            <div class="item-name">
+                ${escapeHTML(item.name)}
+            </div>
+
+            <div class="actions">
+
+                <button
+                    class="complete-btn"
+                    onclick="toggleComplete(${item.id})"
+                >
+                    ${item.completed ? "Undo" : "Complete"}
+                </button>
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteItem(${item.id})"
+                >
+                    Delete
+                </button>
+
+            </div>
+
+        `;
+
+
+        shoppingList.appendChild(li);
+
+    });
+
+
+    updateCounter();
+
+}
+
+
+/* =====================================
+   ADD ITEM
+===================================== */
+
+function addItem() {
+
+    const name =
+        itemInput.value.trim();
+
+
+    /* Don't add empty item */
+
+    if (name === "") {
+
+        itemInput.focus();
+
+        return;
+    }
+
+
+    /* Create new item */
+
+    const newItem = {
+
+        id: Date.now(),
+
+        name: name,
+
+        completed: false
+
+    };
+
+
+    /* Add to array */
+
+    items.push(newItem);
+
+
+    /* Save */
+
+    saveItems();
+
+
+    /* Refresh display */
+
+    displayItems();
+
+
+    /* Clear input */
+
+    itemInput.value = "";
+
+    itemInput.focus();
+
+}
+
+
+/* =====================================
+   ENTER KEY SUPPORT
+===================================== */
+
+itemInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+
+            addItem();
+
+        }
+
+    }
+);
+
+
+/* =====================================
+   COMPLETE / UNDO
+===================================== */
+
+function toggleComplete(id) {
+
+    items =
+        items.map(item => {
+
+            if (item.id === id) {
+
+                return {
+                    ...item,
+                    completed: !item.completed
+                };
+
+            }
+
+            return item;
+
+        });
+
+
+    saveItems();
+
+    displayItems();
+
+}
+
+
+/* =====================================
+   DELETE ITEM
+===================================== */
+
+function deleteItem(id) {
+
+    items =
+        items.filter(
+            item => item.id !== id
+        );
+
+
+    saveItems();
+
+    displayItems();
+
+}
+
+
+/* =====================================
+   CLEAR ALL
+===================================== */
+
+function clearAll() {
+
+    if (items.length === 0) {
+
+        return;
+
+    }
+
+
+    const confirmation =
+        confirm(
+            "Are you sure you want to clear the entire shopping list?"
+        );
+
+
+    if (confirmation) {
+
+        items = [];
+
+        saveItems();
+
+        displayItems();
+
+    }
+
+}
+
+
+/* =====================================
+   ITEM COUNTER
+===================================== */
+
+function updateCounter() {
+
+    const total =
+        items.length;
+
+    const completed =
+        items.filter(
+            item => item.completed
+        ).length;
+
+
+    if (total === 0) {
+
+        counter.textContent =
+            "0 items";
+
+    } else {
+
+        counter.textContent =
+            `${total} items • ${completed} completed`;
+
+    }
+
+}
+
+
+/* =====================================
+   SECURITY:
+   PREVENT HTML INJECTION
+===================================== */
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+/* =====================================
+   INITIAL DISPLAY
+===================================== */
+
+displayItems();
+
+</script>
+
+</body>
+</html>
